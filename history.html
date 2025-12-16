@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Эфир</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=IM+Fell+English:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* ===== ТЁМНЫЙ (ПО УМОЛЧАНИЮ) ===== */
+  --bg:#0c0805;
+  --bg2:#120c07;
+  --panel:#15100b;
+  --card:#1c140e;
+  --card2:#23170f;
+  --text:#f3e6cf;
+  --muted:#c7b08a;
+  --dim:#9a8464;
+  --accent:#e9cf67;
+  --accent2:#caa53b;
+  --border:#3a2b1b;
+  --glow: rgba(233,207,103,.45);
+  --danger:#b23a3a;
+  --ok:#2f8a55;
+
+  --tab-bg: rgba(255,255,255,.03);
+  --tab-active: linear-gradient(180deg,#e9cf67,#caa53b);
+  --tab-shadow: 0 0 24px rgba(233,207,103,.35);
+
+  --shadow: 0 16px 40px rgba(0,0,0,.45);
+  --shadow2: 0 10px 24px rgba(0,0,0,.35);
+  --radius:18px;
+
+  --fontTitle: "Cinzel", serif;
+  --fontLore: "IM Fell English", serif;
+  --fontUI: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+
+  --fzBase: 18px;
+  --fzSmall: 14px;
+  --fzH1: 46px;
+  --fzH2: 30px;
+  --fzH3: 20px;
+}
+
+/* ===== СВЕТЛАЯ ТЕМА ===== */
+body.light{
+  --bg:#f4efe7;
+  --bg2:#ffffff;
+  --panel:#ffffff;
+  --card:#faf7f2;
+  --card2:#ffffff;
+  --text:#2b1d12;
+  --muted:#6a4c32;
+  --dim:#7c5b3d;
+  --accent:#b08a2e;
+  --accent2:#8f6a1f;
+  --border:#e1d4bc;
+  --glow: rgba(176,138,46,.35);
+  --tab-bg:#ffffff;
+  --tab-active: linear-gradient(180deg,#b08a2e,#8f6a1f);
+}
+
+/* ===== ФИОЛЕТОВАЯ (МАГИЯ) ===== */
+body.violet{
+  --bg:#120816;
+  --bg2:#1a0d22;
+  --panel:#1b1026;
+  --card:#231330;
+  --card2:#2a163c;
+  --text:#f3dcff;
+  --muted:#c8a9dd;
+  --dim:#a786bf;
+  --accent:#b77cff;
+  --accent2:#8b4fd6;
+  --border:#3c2057;
+  --glow: rgba(183,124,255,.45);
+  --tab-bg: rgba(183,124,255,.08);
+  --tab-active: linear-gradient(180deg,#b77cff,#8b4fd6);
+  --tab-shadow: 0 0 26px rgba(183,124,255,.35);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  font-family: var(--fontUI);
+  font-size: var(--fzBase);
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% -10%, rgba(233,207,103,.12), transparent 55%),
+    radial-gradient(900px 520px at 85% 0%, rgba(233,207,103,.08), transparent 55%),
+    radial-gradient(1100px 700px at 50% 120%, rgba(110,70,30,.22), transparent 60%),
+    linear-gradient(180deg, var(--bg2), var(--bg));
+  min-height:100vh;
+}
+
+header{
+  text-align:center;
+  padding:26px 14px 18px;
+  border-bottom:1px solid rgba(233,207,103,.14);
+  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.12));
+}
+header h1{
+  font-family: var(--fontTitle);
+  font-size: var(--fzH1);
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-shadow: 0 10px 30px rgba(0,0,0,.55);
+}
+header .sub{
+  margin-top:8px;
+  font-family: var(--fontLore);
+  font-size: 20px;
+  color: rgba(243,230,207,.92);
+  opacity:.9;
+}
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  padding:12px 12px;
+  background: rgba(10,7,4,.86);
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid rgba(233,207,103,.12);
+}
+.navRow{
+  max-width: 1600px;
+  margin:0 auto;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+}
+nav button{
+  background: var(--tab-bg);
+  border:1px solid var(--border);
+  color: var(--text);
+  padding:12px 18px;
+  border-radius:16px;
+  cursor:pointer;
+  font-family: var(--fontTitle);
+  font-weight:700;
+  letter-spacing:.6px;
+  position:relative;
+  transition: all .18s ease;
+  box-shadow: inset 0 0 0 rgba(0,0,0,0);
+}
+nav button:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+nav button.active{
+  background: var(--tab-active);
+  color:#0b0704;
+  box-shadow: var(--tab-shadow);
+  border-color: transparent;
+}
+nav button.active::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:18px;
+  box-shadow: 0 0 22px var(--glow);
+  pointer-events:none;
+}
+nav .right{
+  display:flex;
+  gap:10px;
+  margin-left:auto;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+main{
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 18px 12px 50px;
+}
+section{ display:none; animation:fade .18s ease; }
+section.active{ display:block; }
+@keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+
+.row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.spacer{ flex:1; }
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  border: 1px solid rgba(233,207,103,.14);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow2);
+  padding: 16px;
+}
+.card.big{ padding: 18px; }
+.paper{
+  background:
+    radial-gradient(900px 480px at 20% 0%, rgba(233,207,103,.06), transparent 55%),
+    radial-gradient(900px 480px at 90% 0%, rgba(233,207,103,.05), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.06));
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 14px;
+}
+@media(max-width: 860px){ .grid{ grid-template-columns: 1fr; } }
+
+h2{
+  font-family: var(--fontTitle);
+  font-size: var(--fzH2);
+  color: var(--accent);
+  margin-bottom: 10px;
+  letter-spacing: .6px;
+}
+h3{
+  font-family: var(--fontTitle);
+  font-size: var(--fzH3);
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.hint{
+  font-family: var(--fontLore);
+  font-size: 20px;
+  color: rgba(243,230,207,.92);
+  opacity: .85;
+  line-height: 1.45;
+}
+.small{
+  font-size: var(--fzSmall);
+  color: var(--muted);
+  opacity: .95;
+}
+
+label{
+  display:block;
+  margin: 10px 0 6px;
+  color: rgba(233,207,103,.85);
+  font-family: var(--fontTitle);
+  font-size: 14px;
+  letter-spacing:.4px;
+}
+
+input, textarea, select{
+  width:100%;
+  background: rgba(0,0,0,.36);
+  color: var(--text);
+  border: 1px solid rgba(233,207,103,.16);
+  border-radius: 14px;
+  padding: 12px 12px;
+  font-size: 17px;
+  outline:none;
+  transition: box-shadow .12s ease, border-color .12s ease;
+}
+textarea{ min-height: 110px; resize: vertical; }
+input:focus, textarea:focus, select:focus{
+  border-color: rgba(233,207,103,.42);
+  box-shadow: 0 0 0 4px rgba(233,207,103,.12);
+}
+
+.btn{
+  border:none;
+  background: var(--tab-active);
+  color: #0b0704;
+  padding: 10px 14px;
+  border-radius: 14px;
+  cursor:pointer;
+  font-family: var(--fontTitle);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing:.4px;
+  transition: transform .12s ease, filter .12s ease;
+}
+.btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+.btn:active{ transform: translateY(0); }
+.btn.ghost{
+  background: rgba(255,255,255,.02);
+  color: var(--text);
+  border: 1px solid rgba(233,207,103,.18);
+}
+.btn.danger{
+  background: linear-gradient(180deg, rgba(178,58,58,.95), rgba(140,38,38,.92));
+  color:#fff;
+}
+.btn.ok{
+  background: linear-gradient(180deg, rgba(63,171,106,.95), rgba(47,138,85,.92));
+  color:#07130c;
+}
+.btn.small{ padding: 8px 12px; border-radius: 12px; }
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(233,207,103,.18);
+  background: rgba(233,207,103,.06);
+  color: rgba(233,207,103,.96);
+  font-family: var(--fontTitle);
+  font-weight: 800;
+  font-size: 12.5px;
+}
+.hr{ height:1px; background: rgba(233,207,103,.12); margin: 14px 0; }
+
+#saveDot{
+  position:fixed;
+  top:14px;
+  right:14px;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background: var(--ok);
+  opacity:0;
+  transition: opacity .25s ease;
+  box-shadow: 0 0 0 4px rgba(47,138,85,.14);
+  z-index:999;
+}
+#saveDot.show{ opacity:1; }
+#errorBar{
+  display:none;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,120,120,.35);
+  background: rgba(160,40,40,.18);
+  color: rgba(255,210,210,.96);
+}
+
+/* MAP */
+.mapLayout{
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 14px;
+  align-items:start;
+}
+@media(max-width: 1100px){ .mapLayout{ grid-template-columns: 1fr; } }
+.mapFrame{
+  position:relative;
+  height: 76vh;
+  border-radius: var(--radius);
+  overflow:hidden;
+  border:1px solid rgba(233,207,103,.18);
+  background:
+    radial-gradient(1200px 700px at 30% 0%, rgba(233,207,103,.10), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.45));
+  box-shadow: var(--shadow);
+}
+.mapImg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit: contain;
+  user-select:none;
+  pointer-events:none; /* no accidental pan/zoom */
+  -webkit-user-drag: none;
+  transform-origin: center center;
+}
+.layer{ position:absolute; inset:0; }
+.svgLayer{ position:absolute; inset:0; pointer-events:auto; }
+
+.marker{
+  position:absolute;
+  transform: translate(-50%,-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  cursor:pointer;
+  user-select:none;
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+  border: 2px solid rgba(0,0,0,.35);
+}
+.marker.selected{ outline: 4px solid rgba(255,255,255,.18); }
+
+.markerLabel{
+  position:absolute;
+  transform: translate(-50%, 10px);
+  font-family: var(--fontTitle);
+  font-weight:800;
+  font-size: 14px;
+  color: rgba(233,207,103,.98);
+  text-shadow: 0 6px 18px rgba(0,0,0,.85);
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:.95;
+}
+
+.legendRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.legendRow .pill{
+  cursor:pointer;
+  user-select:none;
+}
+.legendRow .pill.off{
+  opacity:.35;
+  filter:saturate(.4);
+}
+
+.timelineBar{
+  height: 20px;
+  border-radius: 999px;
+  border:1px solid rgba(233,207,103,.16);
+  background: rgba(233,207,103,.06);
+  overflow:hidden;
+  position:relative;
+}
+.timelineFill{
+  position:absolute; left:0; top:0; bottom:0;
+  background: linear-gradient(90deg, rgba(233,207,103,.15), rgba(233,207,103,.55));
+}
+
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+
+<body>
+<div id="saveDot"></div>
+
+<header>
+  <h1>Эфир</h1>
+  <div class="sub">Личный атлас мира: карта, эпохи, силы, тайны и хроника</div>
+</header>
+
+<nav>
+  <div class="navRow">
+    <button data-tab="world" class="active">🌍 Мир</button>
+    <button data-tab="map">🗺 Карта</button>
+    <button data-tab="timeline">⏳ Эпохи</button>
+    <button data-tab="factions">🩸 Фракции</button>
+    <button data-tab="events">📌 События</button>
+    <button data-tab="links">🔗 Связи</button>
+    <button data-tab="checkpoints">✅ Чекпоинты</button>
+    <button data-tab="journal">📜 Хроника</button>
+    <button data-tab="secrets">🔮 Тайное</button>
+
+    <div class="right">
+      <button id="themeDark" class="btn ghost small" title="Тёмный">🌑</button>
+      <button id="themeLight" class="btn ghost small" title="Светлый">☀️</button>
+      <button id="themeViolet" class="btn ghost small" title="Фиолетовый">💜</button>
+
+      <button id="exportBtn" class="btn ghost small">💾 Экспорт</button>
+      <button id="importBtn" class="btn ghost small">📥 Импорт</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div id="errorBar"><b>Ошибка:</b> <span id="errorText"></span></div>
+
+  <!-- WORLD -->
+  <section id="world" class="active">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Мир Эфир</h2>
+        <div class="spacer"></div>
+        <span class="pill">основа</span>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Короткое, сильное описание мира. Здесь задаётся тон: цена магии, дух эпохи, страхи и надежды.
+      </div>
+
+      <label>Логлайн мира (1–2 строки)</label>
+      <input id="worldLogline" placeholder="Напр.: Эфир — мир клинков и клятв, где магия всегда требует платы…">
+
+      <label>Законы мира</label>
+      <textarea id="worldRules" placeholder="Как работает магия? что запрещено? что свято?"></textarea>
+
+      <label>Главные темы (через запятую)</label>
+      <input id="worldThemes" placeholder="магия, вера, упадок, война…">
+
+      <label>Твоя авторская нить</label>
+      <textarea id="worldNote" placeholder="Что ты хочешь прожить в этой истории?"></textarea>
+
+      <div class="hr"></div>
+      <div class="row">
+        <button class="btn ok" id="worldSaveBtn">💾 Сохранить</button>
+        <span class="small">Автосохранение работает всегда, но кнопка — как печать мастера.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <section id="map">
+    <div class="mapLayout">
+      <div class="card big paper">
+        <div class="row">
+          <h2>Карта Эфира</h2>
+          <div class="spacer"></div>
+          <span class="pill" id="mapModePill">Режим: Отметки</span>
+        </div>
+
+        <div class="hint" style="margin-bottom:10px;">
+          <b>Случайный зум/перемещение отключены.</b> Подгоняй карту через масштаб и режим <span class="mono">contain/cover</span>.
+          Добавляй отметки, регионы и связи. Включай слои как легенду карты.
+        </div>
+
+        <div class="legendRow" style="margin:10px 0;">
+          <span class="pill" id="layerPolitics">🏛 Политика</span>
+          <span class="pill" id="layerMagic">✨ Магия</span>
+          <span class="pill" id="layerWar">⚔ Война</span>
+          <span class="pill" id="layerSecrets">🔮 Тайны</span>
+          <span class="pill" id="layerAll">🧭 Всё</span>
+          <div class="spacer"></div>
+
+          <label style="display:flex; gap:8px; align-items:center; margin:0; font-family:var(--fontUI); color:var(--muted);">
+            <input type="checkbox" id="toggleLabels" style="width:18px; height:18px; margin:0;">
+            Подписи
+          </label>
+        </div>
+
+        <div class="row" style="margin:10px 0;">
+          <button class="btn" id="modeMarkers">📍 Отметки</button>
+          <button class="btn ghost" id="modeRegions">🗺 Регионы</button>
+          <button class="btn ghost" id="modeLinks">🔗 Связи</button>
+          <button class="btn ghost" id="modeView">🔒 Просмотр</button>
+          <div class="spacer"></div>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="card paper" style="margin:0;">
+            <h3>Карта</h3>
+            <label>Загрузить изображение</label>
+            <input type="file" id="mapUpload" accept="image/*">
+
+            <div class="row">
+              <div style="flex:1;">
+                <label>Режим подгонки</label>
+                <select id="fitMode">
+                  <option value="contain">contain (влезает целиком)</option>
+                  <option value="cover">cover (без рамок)</option>
+                </select>
+              </div>
+              <div style="flex:1;">
+                <label>Масштаб карты</label>
+                <input id="mapScale" type="range" min="70" max="170" value="100">
+                <div class="small">Текущий: <span id="mapScaleLabel">100%</span></div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn ghost small" id="clearMap">Убрать карту</button>
+              <button class="btn danger small" id="clearMapObjects">Стереть отметки/регионы/линии</button>
+            </div>
+          </div>
+
+          <div class="card paper" style="margin:0;">
+            <h3>Создание</h3>
+
+            <div id="markerCreate">
+              <label>Тип отметки</label>
+              <select id="markerType">
+                <option value="city">🏰 Город</option>
+                <option value="village">🏘 Деревня</option>
+                <option value="fort">🛡 Крепость</option>
+                <option value="tower">🗼 Башня</option>
+                <option value="ruins">⚔ Руины</option>
+                <option value="dungeon">🕳 Подземелье</option>
+                <option value="magic">✨ Магическое место</option>
+                <option value="port">⚓ Порт</option>
+                <option value="danger">☠ Опасность</option>
+              </select>
+
+              <label>Слой</label>
+              <select id="markerLayer">
+                <option value="politics">🏛 Политика</option>
+                <option value="magic">✨ Магия</option>
+                <option value="war">⚔ Война</option>
+                <option value="secrets">🔮 Тайны</option>
+              </select>
+
+              <label>Цвет</label>
+              <select id="markerColor">
+                <option value="gold">Золото</option>
+                <option value="white">Белый</option>
+                <option value="red">Красный</option>
+                <option value="blue">Синий</option>
+                <option value="green">Зелёный</option>
+                <option value="purple">Фиолетовый</option>
+              </select>
+
+              <label>Глава (эпоха/акт)</label>
+              <input id="markerChapter" type="number" min="1" value="1">
+
+              <label>Теги (через запятую)</label>
+              <input id="markerTags" placeholder="магия, вера, война…">
+              <div class="small">Совет: теги добавятся в «Темы» автоматически.</div>
+            </div>
+
+            <div id="regionCreate" style="display:none;">
+              <div class="hint">
+                Режим регионов: кликай по карте, чтобы ставить вершины полигона.
+                Минимум 3 точки. Затем нажми <b>Завершить регион</b>.
+              </div>
+              <label>Слой региона</label>
+              <select id="regionLayerSel">
+                <option value="politics">🏛 Политика</option>
+                <option value="magic">✨ Магия</option>
+                <option value="war">⚔ Война</option>
+                <option value="secrets">🔮 Тайны</option>
+              </select>
+              <div class="row" style="margin-top:10px;">
+                <button class="btn ok small" id="finishRegion">✅ Завершить регион</button>
+                <button class="btn danger small" id="cancelRegion">✖ Отмена</button>
+              </div>
+            </div>
+
+            <div id="linkCreate" style="display:none;">
+              <div class="hint">
+                Режим связей на карте: кликни <b>две отметки</b> — появится линия.
+              </div>
+              <div class="pill" id="linkHintPill">Выбери первую отметку…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="mapFrame" id="mapFrame">
+          <img id="mapImg" class="mapImg" alt="Карта">
+          <svg id="regionSvg" class="svgLayer"></svg>
+          <svg id="linkSvg" class="svgLayer"></svg>
+          <div id="markerLayerDiv" class="layer"></div>
+          <div id="labelLayerDiv" class="layer"></div>
+        </div>
+      </div>
+
+      <div class="card big paper">
+        <div class="row">
+          <h2>Выбранное</h2>
+          <div class="spacer"></div>
+          <span class="pill" id="selectedPill">ничего</span>
+        </div>
+
+        <div id="selectedEditor" class="small" style="margin-top:10px;">
+          Выбери отметку/регион/линию на карте, чтобы редактировать.
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <h3 style="margin:0;">Списки карты</h3>
+          <div class="spacer"></div>
+          <input id="mapSearch" placeholder="поиск по названию/тегам/заметкам…" style="max-width:420px;">
+        </div>
+
+        <div class="hr"></div>
+        <div id="mapLists"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Эпохи Эфира</h2>
+        <div class="spacer"></div>
+        <button class="btn" id="addEraBtn">➕ Новая эпоха</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Визуальная шкала времени. Привязывай объекты к главам, чтобы история ощущалась как легенда.
+      </div>
+      <div id="erasGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- FACTIONS -->
+  <section id="factions">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Фракции</h2>
+        <div class="spacer"></div>
+        <button class="btn" id="addFactionBtn">➕ Новая фракция</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Фракции могут влиять на регионы: выбери фракцию в редакторе региона — регион подсветится её цветом.
+      </div>
+      <div id="factionsGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events">
+    <div class="card big paper">
+      <div class="row">
+        <h2>События</h2>
+        <div class="spacer"></div>
+        <button class="btn" id="addEventBtn">➕ Новое событие</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        События двигают мир. Они автоматически попадают в хронику.
+      </div>
+      <div id="eventsGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- LINKS -->
+  <section id="links">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Связи мира</h2>
+        <div class="spacer"></div>
+        <button class="btn" id="addLinkBtn">➕ Новая связь</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Связи: персонаж ↔ локация ↔ событие ↔ регион ↔ фракция.
+      </div>
+      <div id="linksGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- CHECKPOINTS -->
+  <section id="checkpoints">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Чекпоинты</h2>
+        <div class="spacer"></div>
+        <button class="btn ok" id="createCheckpointBtn">✅ Создать чекпоинт</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Чекпоинт — это “снимок мира”. Можно откатиться назад, если эксперимент пошёл не туда.
+        Создание чекпоинта автоматически пишет запись в хронику.
+      </div>
+
+      <label>Название чекпоинта</label>
+      <input id="cpTitle" placeholder="Напр.: После падения Тронного Города">
+
+      <label>Описание</label>
+      <textarea id="cpNote" placeholder="Что именно сейчас происходит в мире?"></textarea>
+
+      <div class="hr"></div>
+      <div id="checkpointsGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section id="journal">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Хроника</h2>
+        <div class="spacer"></div>
+        <button class="btn" id="addJournalBtn">➕ Ручная запись</button>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Здесь хранится летопись. Часть записей создаётся автоматически (карта, события, чекпоинты).
+      </div>
+      <div id="journalGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- SECRETS -->
+  <section id="secrets">
+    <div class="card big paper">
+      <div class="row">
+        <h2>Тайное</h2>
+        <div class="spacer"></div>
+        <span class="pill">скрытый слой</span>
+      </div>
+      <div class="hint" style="margin-bottom:10px;">
+        Все тайные заметки мира собираются здесь автоматически.
+      </div>
+      <div id="secretsGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+</main>
+
+<script>
+/* =========================
+   ETHIR ATLAS ULTIMATE (single-file)
+   ========================= */
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const asNum = (v, f=0) => Number.isFinite(Number(v)) ? Number(v) : f;
+const clamp = (n,a,b) => Math.max(a, Math.min(b, n));
+const esc = (s) => String(s ?? '')
+  .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+  .replaceAll('"','&quot;').replaceAll("'","&#039;");
+
+const STORAGE_KEY = "ether_atlas_ultimate_v1";
+
+const saveDot = $("#saveDot");
+let saveTimer = null;
+function showError(msg){ $("#errorText").textContent = msg; $("#errorBar").style.display = "block"; }
+function clearError(){ $("#errorBar").style.display = "none"; }
+function flashSaved(){ saveDot.classList.add("show"); setTimeout(()=>saveDot.classList.remove("show"), 650); }
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveState, 250); }
+
+function normalizeTags(str){
+  return String(str||"").split(",").map(s=>s.trim()).filter(Boolean).slice(0, 40);
+}
+function ensureTheme(name){
+  const n = (name||"").trim(); if(!n) return;
+  if(state.themes.some(t=>t.toLowerCase()===n.toLowerCase())) return;
+  state.themes.push(n);
+}
+function ensureThemesFromTags(tags){ (tags||[]).forEach(ensureTheme); }
+
+function nowIso(){ return new Date().toISOString(); }
+function prettyDate(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString("ru-RU");
+  }catch{ return iso; }
+}
+
+/* ===== Auto-chronicle ===== */
+function addJournal(kind, title, text, meta={}){
+  state.journal.unshift({
+    id: uid(),
+    at: nowIso(),
+    kind,
+    title: title || "Запись",
+    text: text || "",
+    meta
+  });
+  scheduleSave();
+  renderJournal();
+}
+
+/* ===== Default state ===== */
+function defaultState(){
+  return {
+    version: 1,
+    ui: {
+      tab: "world",
+      mapMode: "markers",
+      showLabels: true,
+      fitMode: "contain",
+      mapScale: 100,
+      selected: { kind: null, id: null },
+      linkFirstMarkerId: null,
+      regionDraft: [],
+      mapSearch: "",
+      layerFilter: { politics:true, magic:true, war:true, secrets:true }
+    },
+    world: { logline:"", rules:"", themes:"", note:"" },
+    themes: ["Магия","Вера","Упадок","Война"],
+    eras: [{ id: uid(), title: "Эпоха I — Начало", from: 0, to: 100, summary: "Первые клятвы, первые короны, первые проклятия." }],
+    factions: [{ id: uid(), name: "Орден Пепла", color: "red", summary: "Они верят, что мир должен быть очищен огнём." }],
+    events: [],
+    links: [],
+    checkpoints: [],
+    journal: [{ id: uid(), at: nowIso(), kind:"system", title:"Атлас создан", text:"Эфир ждёт твоей истории.", meta:{} }],
+    map: { imageDataUrl:null, markers:[], regions:[], mapLinks:[] }
+  };
+}
+
+function migrateState(s){
+  const base = defaultState();
+  if(!s || typeof s !== "object") return base;
+  return {
+    ...base,
+    ...s,
+    ui: { ...base.ui, ...(s.ui||{}) },
+    world: { ...base.world, ...(s.world||{}) },
+    eras: Array.isArray(s.eras) && s.eras.length ? s.eras : base.eras,
+    factions: Array.isArray(s.factions) ? s.factions : base.factions,
+    events: Array.isArray(s.events) ? s.events : [],
+    links: Array.isArray(s.links) ? s.links : [],
+    checkpoints: Array.isArray(s.checkpoints) ? s.checkpoints : [],
+    journal: Array.isArray(s.journal) ? s.journal : base.journal,
+    themes: Array.isArray(s.themes) ? s.themes : base.themes,
+    map: {
+      ...base.map,
+      ...(s.map||{}),
+      markers: Array.isArray(s.map?.markers) ? s.map.markers : [],
+      regions: Array.isArray(s.map?.regions) ? s.map.regions : [],
+      mapLinks: Array.isArray(s.map?.mapLinks) ? s.map.mapLinks : []
+    }
+  };
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    return migrateState(JSON.parse(raw));
+  }catch(e){
+    showError("Не удалось загрузить сохранение. Создано новое.");
+    return defaultState();
+  }
+}
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    clearError();
+    flashSaved();
+  }catch(e){
+    showError("Не удалось сохранить. Возможно, не хватает места — сделай экспорт.");
+  }
+}
+
+let state = loadState();
+
+/* ===== Themes (color grading) ===== */
+const applyTheme = (t)=>{
+  document.body.classList.remove("light","violet");
+  if(t!=="dark") document.body.classList.add(t);
+  localStorage.setItem("ether_theme", t);
+};
+$("#themeDark").onclick = ()=>applyTheme("dark");
+$("#themeLight").onclick = ()=>applyTheme("light");
+$("#themeViolet").onclick = ()=>applyTheme("violet");
+applyTheme(localStorage.getItem("ether_theme") || "dark");
+
+/* ===== Tabs ===== */
+function openTab(id){
+  state.ui.tab = id;
+  $$("nav button[data-tab]").forEach(b=>b.classList.remove("active"));
+  $$("main section").forEach(s=>s.classList.remove("active"));
+  $(`nav button[data-tab="${id}"]`)?.classList.add("active");
+  $(`#${id}`)?.classList.add("active");
+  scheduleSave();
+  if(id==="map") requestAnimationFrame(renderMap);
+}
+$$("nav button[data-tab]").forEach(b=>b.addEventListener("click", ()=>openTab(b.dataset.tab)));
+
+/* ===== Export / Import ===== */
+$("#exportBtn").addEventListener("click", ()=>{
+  try{
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ether_atlas_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1200);
+  }catch{ showError("Экспорт не удался."); }
+});
+$("#importBtn").addEventListener("click", ()=>$("#importFile").click());
+$("#importFile").addEventListener("change", (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      state = migrateState(JSON.parse(String(r.result||"{}")));
+      saveState();
+      renderAll();
+      openTab(state.ui.tab || "world");
+    }catch{ showError("Неверный JSON файл импорта."); }
+  };
+  r.readAsText(file);
+  e.target.value = "";
+});
+
+/* ===== World ===== */
+function renderWorld(){
+  $("#worldLogline").value = state.world.logline || "";
+  $("#worldRules").value = state.world.rules || "";
+  $("#worldThemes").value = state.world.themes || "";
+  $("#worldNote").value = state.world.note || "";
+
+  const wire = (id, key) => {
+    $(id).addEventListener("input", ()=>{
+      state.world[key] = $(id).value;
+      scheduleSave();
+    });
+  };
+  if(!renderWorld._wired){
+    wire("#worldLogline","logline");
+    wire("#worldRules","rules");
+    wire("#worldThemes","themes");
+    wire("#worldNote","note");
+    $("#worldSaveBtn").addEventListener("click", ()=>{ saveState(); flashSaved(); });
+    renderWorld._wired = true;
+  }
+}
+
+/* ===== Map ===== */
+const mapImg = $("#mapImg");
+const mapFrame = $("#mapFrame");
+const markerLayerDiv = $("#markerLayerDiv");
+const labelLayerDiv = $("#labelLayerDiv");
+const regionSvg = $("#regionSvg");
+const linkSvg = $("#linkSvg");
+
+function markerIcon(type){
+  return ({
+    city:"🏰", village:"🏘", fort:"🛡", tower:"🗼", ruins:"⚔", dungeon:"🕳",
+    magic:"✨", port:"⚓", danger:"☠"
+  })[type] || "📍";
+}
+function colorToRgba(color, a=0.92){
+  const map = {
+    gold:[233,207,103],
+    white:[245,236,220],
+    red:[190,70,70],
+    blue:[80,130,220],
+    green:[70,180,120],
+    purple:[170,110,220]
+  };
+  const c = map[color] || map.gold;
+  return `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+}
+function restoreMapImage(){
+  if(state.map.imageDataUrl){
+    mapImg.src = state.map.imageDataUrl;
+    mapImg.style.display = "block";
+  }else{
+    mapImg.style.display = "none";
+  }
+}
+async function fileToDataUrl(file){
+  return new Promise((resolve, reject)=>{
+    const r = new FileReader();
+    r.onload = ()=>resolve(String(r.result));
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+function rect(){ return mapFrame.getBoundingClientRect(); }
+function clientToPercent(cx, cy){
+  const r = rect();
+  return { x: clamp((cx - r.left)/r.width, 0, 1), y: clamp((cy - r.top)/r.height, 0, 1) };
+}
+function percentToPx(p){
+  const r = rect();
+  return { x: p.x * r.width, y: p.y * r.height };
+}
+function getMarker(id){ return state.map.markers.find(m=>m.id===id); }
+function getRegion(id){ return state.map.regions.find(r=>r.id===id); }
+function getMapLink(id){ return state.map.mapLinks.find(l=>l.id===id); }
+
+/* disable accidental zoom/pan */
+mapFrame.addEventListener("wheel", (e)=>e.preventDefault(), {passive:false});
+mapFrame.addEventListener("gesturestart", (e)=>e.preventDefault());
+mapFrame.addEventListener("gesturechange", (e)=>e.preventDefault());
+mapFrame.addEventListener("gestureend", (e)=>e.preventDefault());
+
+function setLayerFilter(key){
+  if(key==="all"){
+    const anyOff = Object.values(state.ui.layerFilter).some(v=>!v);
+    state.ui.layerFilter = { politics:anyOff, magic:anyOff, war:anyOff, secrets:anyOff };
+  }else{
+    state.ui.layerFilter[key] = !state.ui.layerFilter[key];
+  }
+  scheduleSave();
+  renderMap();
+  renderLayerPills();
+}
+function renderLayerPills(){
+  const setPill = (id, on)=>{
+    const el = $(id);
+    el.classList.toggle("off", !on);
+  };
+  setPill("#layerPolitics", state.ui.layerFilter.politics);
+  setPill("#layerMagic", state.ui.layerFilter.magic);
+  setPill("#layerWar", state.ui.layerFilter.war);
+  setPill("#layerSecrets", state.ui.layerFilter.secrets);
+}
+
+$("#layerPolitics").onclick = ()=>setLayerFilter("politics");
+$("#layerMagic").onclick = ()=>setLayerFilter("magic");
+$("#layerWar").onclick = ()=>setLayerFilter("war");
+$("#layerSecrets").onclick = ()=>setLayerFilter("secrets");
+$("#layerAll").onclick = ()=>setLayerFilter("all");
+
+function setMapMode(mode){
+  state.ui.mapMode = mode;
+  $("#modeMarkers").classList.toggle("active", mode==="markers");
+  $("#modeRegions").classList.toggle("active", mode==="regions");
+  $("#modeLinks").classList.toggle("active", mode==="links");
+  $("#modeView").classList.toggle("active", mode==="view");
+
+  $("#markerCreate").style.display = (mode==="markers") ? "block" : "none";
+  $("#regionCreate").style.display = (mode==="regions") ? "block" : "none";
+  $("#linkCreate").style.display = (mode==="links") ? "block" : "none";
+
+  $("#mapModePill").textContent =
+    mode==="markers" ? "Режим: Отметки" :
+    mode==="regions" ? "Режим: Регионы" :
+    mode==="links" ? "Режим: Связи" : "Режим: Просмотр";
+
+  if(mode !== "links") state.ui.linkFirstMarkerId = null;
+  if(mode !== "regions") state.ui.regionDraft = [];
+  scheduleSave();
+  renderMap();
+  renderSelectedEditor();
+}
+$("#modeMarkers").onclick = ()=>setMapMode("markers");
+$("#modeRegions").onclick = ()=>setMapMode("regions");
+$("#modeLinks").onclick = ()=>setMapMode("links");
+$("#modeView").onclick = ()=>setMapMode("view");
+
+$("#mapUpload").addEventListener("change", async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  try{
+    state.map.imageDataUrl = await fileToDataUrl(file);
+    restoreMapImage();
+    addJournal("map","Загружена карта","Карта мира обновлена.");
+    scheduleSave();
+    renderMap();
+  }catch{ showError("Не удалось загрузить карту."); }
+  e.target.value = "";
+});
+
+$("#fitMode").onchange = ()=>{
+  state.ui.fitMode = $("#fitMode").value;
+  scheduleSave();
+  renderMap();
+};
+$("#mapScale").oninput = ()=>{
+  const v = asNum($("#mapScale").value, 100);
+  state.ui.mapScale = clamp(v, 70, 170);
+  $("#mapScaleLabel").textContent = `${state.ui.mapScale}%`;
+  scheduleSave();
+  renderMap();
+};
+$("#toggleLabels").onchange = ()=>{
+  state.ui.showLabels = $("#toggleLabels").checked;
+  scheduleSave();
+  renderMap();
+};
+
+$("#clearMap").onclick = ()=>{
+  if(!confirm("Убрать карту? (изображение исчезнет, но отметки останутся)")) return;
+  state.map.imageDataUrl = null;
+  restoreMapImage();
+  addJournal("map","Карта убрана","Изображение карты скрыто.");
+  scheduleSave();
+  renderMap();
+};
+$("#clearMapObjects").onclick = ()=>{
+  if(!confirm("Стереть ВСЕ отметки, регионы и линии на карте?")) return;
+  state.map.markers = [];
+  state.map.regions = [];
+  state.map.mapLinks = [];
+  state.ui.selected = {kind:null,id:null};
+  state.ui.linkFirstMarkerId = null;
+  state.ui.regionDraft = [];
+  addJournal("map","Очищена карта","Удалены отметки, регионы и связи на карте.");
+  scheduleSave();
+  renderMap();
+  renderSelectedEditor();
+  renderMapLists();
+  renderSecrets();
+};
+
+function addMarker(p){
+  const m = {
+    id: uid(),
+    x: p.x, y: p.y,
+    type: $("#markerType").value,
+    layer: $("#markerLayer").value,
+    color: $("#markerColor").value,
+    chapter: clamp(asNum($("#markerChapter").value,1), 1, 999999),
+    title: "Новая точка",
+    tags: normalizeTags($("#markerTags").value),
+    note: "",
+    secret: ""
+  };
+  ensureThemesFromTags(m.tags);
+  state.map.markers.unshift(m);
+  state.ui.selected = {kind:"marker", id:m.id};
+  addJournal("map",`Отметка: ${m.title}`,`Добавлена отметка ${markerIcon(m.type)} (${m.layer}).`);
+  scheduleSave();
+  renderMap();
+  renderSelectedEditor();
+  renderMapLists();
+  renderSecrets();
+}
+
+function addMapLink(aId, bId){
+  if(aId === bId) return;
+  const exists = state.map.mapLinks.some(l => (l.a===aId && l.b===bId) || (l.a===bId && l.b===aId));
+  if(exists) return;
+  state.map.mapLinks.unshift({
+    id: uid(),
+    a: aId, b: bId,
+    label: "",
+    kind: "road",
+    color: "white"
+  });
+}
+
+function beginRegionPoint(p){
+  state.ui.regionDraft.push({x:p.x,y:p.y});
+  scheduleSave();
+  renderMap();
+}
+
+$("#finishRegion").onclick = ()=>{
+  if(state.ui.regionDraft.length < 3){
+    alert("Нужно минимум 3 точки для региона.");
+    return;
+  }
+  const layer = $("#regionLayerSel").value;
+  const reg = {
+    id: uid(),
+    name: "Новый регион",
+    layer,
+    color: "gold",
+    factionId: "",
+    tags: [],
+    note: "",
+    secret: "",
+    points: state.ui.regionDraft
+  };
+  state.map.regions.unshift(reg);
+  state.ui.regionDraft = [];
+  state.ui.selected = {kind:"region", id: reg.id};
+  addJournal("map",`Регион: ${reg.name}`,`Создан регион (${layer}).`);
+  scheduleSave();
+  renderMap();
+  renderSelectedEditor();
+  renderMapLists();
+  renderSecrets();
+};
+$("#cancelRegion").onclick = ()=>{
+  state.ui.regionDraft = [];
+  scheduleSave();
+  renderMap();
+};
+
+mapFrame.addEventListener("click", (e)=>{
+  if(state.ui.mapMode === "view") return;
+  if(mapImg.style.display === "none"){ alert("Сначала загрузи карту."); return; }
+  const p = clientToPercent(e.clientX, e.clientY);
+  if(state.ui.mapMode === "markers") addMarker(p);
+  else if(state.ui.mapMode === "regions") beginRegionPoint(p);
+});
+
+function renderMap(){
+  // map view config
+  mapImg.style.objectFit = state.ui.fitMode || "contain";
+  const scale = clamp(asNum(state.ui.mapScale, 100), 70, 170) / 100;
+  mapImg.style.transform = `scale(${scale})`;
+
+  $("#fitMode").value = state.ui.fitMode || "contain";
+  $("#mapScale").value = clamp(asNum(state.ui.mapScale,100), 70, 170);
+  $("#mapScaleLabel").textContent = `${clamp(asNum(state.ui.mapScale,100), 70, 170)}%`;
+  $("#toggleLabels").checked = !!state.ui.showLabels;
+
+  markerLayerDiv.innerHTML = "";
+  labelLayerDiv.innerHTML = "";
+  regionSvg.innerHTML = "";
+  linkSvg.innerHTML = "";
+
+  renderLayerPills();
+
+  const r = rect();
+  for(const svg of [regionSvg, linkSvg]){
+    svg.setAttribute("width", r.width);
+    svg.setAttribute("height", r.height);
+    svg.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
+  }
+
+  // regions
+  for(const reg of state.map.regions){
+    if(!state.ui.layerFilter[reg.layer || "politics"]) continue;
+
+    const pts = reg.points.map(percentToPx);
+    const pointsStr = pts.map(p=>`${p.x},${p.y}`).join(" ");
+    const poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points", pointsStr);
+
+    const faction = state.factions.find(f=>f.id===reg.factionId);
+    const baseColor = faction ? faction.color : reg.color;
+
+    poly.setAttribute("fill", colorToRgba(baseColor, 0.18));
+    poly.setAttribute("stroke", colorToRgba(baseColor, 0.62));
+    poly.setAttribute("stroke-width", "3");
+    poly.style.cursor = "pointer";
+
+    poly.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      state.ui.selected = {kind:"region", id: reg.id};
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+    });
+
+    if(state.ui.selected.kind==="region" && state.ui.selected.id===reg.id){
+      poly.setAttribute("stroke", "rgba(255,255,255,.6)");
+      poly.setAttribute("stroke-width", "4");
+    }
+
+    regionSvg.appendChild(poly);
+
+    // label
+    const cx = pts.reduce((a,p)=>a+p.x,0)/pts.length;
+    const cy = pts.reduce((a,p)=>a+p.y,0)/pts.length;
+    const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+    t.setAttribute("x", cx);
+    t.setAttribute("y", cy);
+    t.setAttribute("fill", "rgba(243,230,207,.88)");
+    t.setAttribute("font-size", "14");
+    t.setAttribute("font-weight", "900");
+    t.setAttribute("text-anchor", "middle");
+    t.style.pointerEvents = "none";
+    t.textContent = reg.name;
+    regionSvg.appendChild(t);
+  }
+
+  // region draft preview
+  if(state.ui.mapMode==="regions" && state.ui.regionDraft.length){
+    const pts = state.ui.regionDraft.map(percentToPx);
+    const pl = document.createElementNS("http://www.w3.org/2000/svg","polyline");
+    pl.setAttribute("points", pts.map(p=>`${p.x},${p.y}`).join(" "));
+    pl.setAttribute("fill", "none");
+    pl.setAttribute("stroke", "rgba(233,207,103,.85)");
+    pl.setAttribute("stroke-width", "3");
+    pl.setAttribute("stroke-dasharray", "7 7");
+    regionSvg.appendChild(pl);
+  }
+
+  // map links (between markers)
+  for(const l of state.map.mapLinks){
+    const a = getMarker(l.a), b = getMarker(l.b);
+    if(!a || !b) continue;
+
+    // show link only if at least one endpoint is visible by layer filter
+    if(!state.ui.layerFilter[a.layer || "politics"] && !state.ui.layerFilter[b.layer || "politics"]) continue;
+
+    const ap = percentToPx(a);
+    const bp = percentToPx(b);
+
+    const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1", ap.x);
+    line.setAttribute("y1", ap.y);
+    line.setAttribute("x2", bp.x);
+    line.setAttribute("y2", bp.y);
+    line.setAttribute("stroke", colorToRgba(l.color || "white", 0.65));
+    line.setAttribute("stroke-width", "4");
+    line.setAttribute("stroke-linecap", "round");
+    linkSvg.appendChild(line);
+
+    const hit = document.createElementNS("http://www.w3.org/2000/svg","line");
+    hit.setAttribute("x1", ap.x); hit.setAttribute("y1", ap.y);
+    hit.setAttribute("x2", bp.x); hit.setAttribute("y2", bp.y);
+    hit.setAttribute("stroke", "rgba(0,0,0,0)");
+    hit.setAttribute("stroke-width", "18");
+    hit.style.pointerEvents = "stroke";
+    hit.style.cursor = "pointer";
+    hit.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      state.ui.selected = {kind:"maplink", id: l.id};
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+    });
+    linkSvg.appendChild(hit);
+
+    if(l.label){
+      const tx = (ap.x+bp.x)/2;
+      const ty = (ap.y+bp.y)/2;
+      const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      txt.setAttribute("x", tx);
+      txt.setAttribute("y", ty);
+      txt.setAttribute("fill", colorToRgba(l.color || "white", 0.82));
+      txt.setAttribute("font-size", "13");
+      txt.setAttribute("font-weight", "900");
+      txt.setAttribute("text-anchor", "middle");
+      txt.style.pointerEvents = "none";
+      txt.textContent = l.label;
+      linkSvg.appendChild(txt);
+    }
+
+    if(state.ui.selected.kind==="maplink" && state.ui.selected.id===l.id){
+      line.setAttribute("stroke", "rgba(255,255,255,.65)");
+      line.setAttribute("stroke-width", "5");
+    }
+  }
+
+  // markers
+  for(const m of state.map.markers){
+    if(!state.ui.layerFilter[m.layer || "politics"]) continue;
+
+    const px = percentToPx(m);
+    const dot = document.createElement("div");
+    dot.className = "marker" + ((state.ui.selected.kind==="marker" && state.ui.selected.id===m.id) ? " selected" : "");
+    dot.style.left = `${px.x}px`;
+    dot.style.top = `${px.y}px`;
+    dot.style.background = colorToRgba(m.color || "gold", 0.92);
+    dot.textContent = markerIcon(m.type);
+    dot.title = `${m.title}\n${(m.tags||[]).join(", ")}`;
+
+    dot.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      state.ui.selected = {kind:"marker", id:m.id};
+
+      if(state.ui.mapMode==="links"){
+        if(!state.ui.linkFirstMarkerId){
+          state.ui.linkFirstMarkerId = m.id;
+          $("#linkHintPill").textContent = "Выбери вторую отметку…";
+        }else{
+          addMapLink(state.ui.linkFirstMarkerId, m.id);
+          state.ui.linkFirstMarkerId = null;
+          $("#linkHintPill").textContent = "Готово. Можно ещё.";
+          addJournal("map","Связь на карте","Создана линия между отметками.");
+        }
+        scheduleSave();
+      }
+
+      renderMap();
+      renderSelectedEditor();
+      renderMapLists();
+    });
+
+    // drag marker only in marker mode
+    dot.addEventListener("mousedown", (e)=>{
+      if(state.ui.mapMode !== "markers") return;
+      state.ui.dragging = m.id;
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    markerLayerDiv.appendChild(dot);
+
+    if(state.ui.showLabels){
+      const lab = document.createElement("div");
+      lab.className = "markerLabel";
+      lab.style.left = `${px.x}px`;
+      lab.style.top = `${px.y}px`;
+      lab.textContent = m.title || "…";
+      labelLayerDiv.appendChild(lab);
+    }
+  }
+}
+
+document.addEventListener("mousemove", (e)=>{
+  const id = state.ui.dragging;
+  if(!id) return;
+  const m = getMarker(id);
+  if(!m) return;
+  const p = clientToPercent(e.clientX, e.clientY);
+  m.x = p.x; m.y = p.y;
+  scheduleSave();
+  renderMap();
+});
+document.addEventListener("mouseup", ()=>{ state.ui.dragging = null; });
+
+window.addEventListener("resize", ()=>{ if($("#map").classList.contains("active")) renderMap(); });
+
+function renderSelectedEditor(){
+  const sel = state.ui.selected;
+  const pill = $("#selectedPill");
+  const editor = $("#selectedEditor");
+
+  if(!sel.kind){
+    pill.textContent = "ничего";
+    editor.innerHTML = `<div class="small">Выбери отметку/регион/линию на карте, чтобы редактировать.</div>`;
+    return;
+  }
+
+  if(sel.kind === "marker"){
+    const m = getMarker(sel.id);
+    if(!m){ state.ui.selected={kind:null,id:null}; renderSelectedEditor(); return; }
+    pill.textContent = "отметка";
+
+    editor.innerHTML = `
+      <h3>Отметка</h3>
+      <label>Название (подпись)</label>
+      <input id="em_title" value="${esc(m.title)}">
+
+      <div class="row">
+        <div style="flex:1;">
+          <label>Тип</label>
+          <select id="em_type">
+            <option value="city">🏰 Город</option>
+            <option value="village">🏘 Деревня</option>
+            <option value="fort">🛡 Крепость</option>
+            <option value="tower">🗼 Башня</option>
+            <option value="ruins">⚔ Руины</option>
+            <option value="dungeon">🕳 Подземелье</option>
+            <option value="magic">✨ Магическое место</option>
+            <option value="port">⚓ Порт</option>
+            <option value="danger">☠ Опасность</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label>Слой</label>
+          <select id="em_layer">
+            <option value="politics">🏛 Политика</option>
+            <option value="magic">✨ Магия</option>
+            <option value="war">⚔ Война</option>
+            <option value="secrets">🔮 Тайны</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="flex:1;">
+          <label>Цвет</label>
+          <select id="em_color">
+            <option value="gold">Золото</option>
+            <option value="white">Белый</option>
+            <option value="red">Красный</option>
+            <option value="blue">Синий</option>
+            <option value="green">Зелёный</option>
+            <option value="purple">Фиолетовый</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label>Глава</label>
+          <input id="em_ch" type="number" min="1" value="${asNum(m.chapter,1)}">
+        </div>
+      </div>
+
+      <label>Теги (через запятую)</label>
+      <input id="em_tags" value="${esc((m.tags||[]).join(", "))}">
+
+      <label>Заметка</label>
+      <textarea id="em_note">${esc(m.note||"")}</textarea>
+
+      <label>🔮 Тайная заметка</label>
+      <textarea id="em_secret" placeholder="пророчества, скрытые причины…">${esc(m.secret||"")}</textarea>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="btn ok small" id="em_save">💾 Сохранить</button>
+        <button class="btn danger small" id="em_del">🗑 Удалить</button>
+      </div>
+    `;
+
+    $("#em_type").value = m.type || "city";
+    $("#em_color").value = m.color || "gold";
+    $("#em_layer").value = m.layer || "politics";
+
+    $("#em_save").onclick = ()=>{
+      m.title = ($("#em_title").value || "").trim() || "Отметка";
+      m.type = $("#em_type").value;
+      m.layer = $("#em_layer").value;
+      m.color = $("#em_color").value;
+      m.chapter = clamp(asNum($("#em_ch").value,1), 1, 999999);
+      m.tags = normalizeTags($("#em_tags").value);
+      m.note = $("#em_note").value || "";
+      m.secret = $("#em_secret").value || "";
+      ensureThemesFromTags(m.tags);
+      addJournal("map","Отметка изменена",`${m.title} обновлена.`);
+      scheduleSave();
+      renderMap();
+      renderMapLists();
+      renderSecrets();
+    };
+    $("#em_del").onclick = ()=>{
+      if(!confirm("Удалить отметку? Линии с ней тоже пропадут.")) return;
+      addJournal("map","Удалена отметка",`Удалена: ${m.title}`);
+      state.map.markers = state.map.markers.filter(x=>x.id!==m.id);
+      state.map.mapLinks = state.map.mapLinks.filter(l=>l.a!==m.id && l.b!==m.id);
+      state.ui.selected = {kind:null,id:null};
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+      renderMapLists();
+      renderSecrets();
+    };
+    return;
+  }
+
+  if(sel.kind === "region"){
+    const r = getRegion(sel.id);
+    if(!r){ state.ui.selected={kind:null,id:null}; renderSelectedEditor(); return; }
+    pill.textContent = "регион";
+
+    const factionOptions = [`<option value="">— нет —</option>`].concat(
+      state.factions.map(f=>`<option value="${esc(f.id)}">${esc(f.name)}</option>`)
+    ).join("");
+
+    editor.innerHTML = `
+      <h3>Регион</h3>
+      <label>Название</label>
+      <input id="er_name" value="${esc(r.name)}">
+
+      <div class="row">
+        <div style="flex:1;">
+          <label>Слой</label>
+          <select id="er_layer">
+            <option value="politics">🏛 Политика</option>
+            <option value="magic">✨ Магия</option>
+            <option value="war">⚔ Война</option>
+            <option value="secrets">🔮 Тайны</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label>Цвет</label>
+          <select id="er_color">
+            <option value="gold">Золото</option>
+            <option value="white">Белый</option>
+            <option value="red">Красный</option>
+            <option value="blue">Синий</option>
+            <option value="green">Зелёный</option>
+            <option value="purple">Фиолетовый</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Фракция-влияние</label>
+      <select id="er_faction">${factionOptions}</select>
+
+      <label>Теги</label>
+      <input id="er_tags" value="${esc((r.tags||[]).join(", "))}">
+
+      <label>Описание</label>
+      <textarea id="er_note">${esc(r.note||"")}</textarea>
+
+      <label>🔮 Тайная заметка</label>
+      <textarea id="er_secret">${esc(r.secret||"")}</textarea>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="btn ok small" id="er_save">💾 Сохранить</button>
+        <button class="btn danger small" id="er_del">🗑 Удалить</button>
+      </div>
+    `;
+
+    $("#er_color").value = r.color || "gold";
+    $("#er_faction").value = r.factionId || "";
+    $("#er_layer").value = r.layer || "politics";
+
+    $("#er_save").onclick = ()=>{
+      r.name = ($("#er_name").value || "").trim() || "Регион";
+      r.layer = $("#er_layer").value;
+      r.color = $("#er_color").value;
+      r.factionId = $("#er_faction").value || "";
+      r.tags = normalizeTags($("#er_tags").value);
+      r.note = $("#er_note").value || "";
+      r.secret = $("#er_secret").value || "";
+      ensureThemesFromTags(r.tags);
+      addJournal("map","Регион изменён",`${r.name} обновлён.`);
+      scheduleSave();
+      renderMap();
+      renderMapLists();
+      renderSecrets();
+    };
+    $("#er_del").onclick = ()=>{
+      if(!confirm("Удалить регион?")) return;
+      addJournal("map","Удалён регион",`Удалён: ${r.name}`);
+      state.map.regions = state.map.regions.filter(x=>x.id!==r.id);
+      state.ui.selected = {kind:null,id:null};
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+      renderMapLists();
+      renderSecrets();
+    };
+    return;
+  }
+
+  if(sel.kind === "maplink"){
+    const l = getMapLink(sel.id);
+    if(!l){ state.ui.selected={kind:null,id:null}; renderSelectedEditor(); return; }
+    pill.textContent = "линия";
+
+    const a = getMarker(l.a), b = getMarker(l.b);
+    editor.innerHTML = `
+      <h3>Линия на карте</h3>
+      <div class="small">Связь: <b>${esc(a?.title||"A")}</b> ↔ <b>${esc(b?.title||"B")}</b></div>
+
+      <label>Подпись</label>
+      <input id="el_label" value="${esc(l.label||"")}">
+
+      <label>Тип</label>
+      <select id="el_kind">
+        <option value="road">Дорога</option>
+        <option value="portal">Портал</option>
+        <option value="blood">Кровная вражда</option>
+        <option value="oath">Клятва/союз</option>
+      </select>
+
+      <label>Цвет</label>
+      <select id="el_color">
+        <option value="white">Белый</option>
+        <option value="gold">Золото</option>
+        <option value="red">Красный</option>
+        <option value="blue">Синий</option>
+        <option value="green">Зелёный</option>
+        <option value="purple">Фиолетовый</option>
+      </select>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="btn ok small" id="el_save">💾 Сохранить</button>
+        <button class="btn danger small" id="el_del">🗑 Удалить</button>
+      </div>
+    `;
+
+    $("#el_kind").value = l.kind || "road";
+    $("#el_color").value = l.color || "white";
+
+    $("#el_save").onclick = ()=>{
+      l.label = $("#el_label").value || "";
+      l.kind = $("#el_kind").value;
+      l.color = $("#el_color").value;
+      addJournal("map","Линия изменена",`Связь на карте обновлена.`);
+      scheduleSave();
+      renderMap();
+      renderMapLists();
+    };
+    $("#el_del").onclick = ()=>{
+      if(!confirm("Удалить линию?")) return;
+      addJournal("map","Линия удалена",`Связь на карте удалена.`);
+      state.map.mapLinks = state.map.mapLinks.filter(x=>x.id!==l.id);
+      state.ui.selected = {kind:null,id:null};
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+      renderMapLists();
+    };
+    return;
+  }
+}
+
+function renderMapLists(){
+  const q = (state.ui.mapSearch || "").trim().toLowerCase();
+  const filter = (txt) => !q || String(txt||"").toLowerCase().includes(q);
+
+  const markers = state.map.markers.slice().sort((a,b)=> (a.title||"").localeCompare(b.title||"", "ru"));
+  const regions = state.map.regions.slice().sort((a,b)=> (a.name||"").localeCompare(b.name||"", "ru"));
+  const links = state.map.mapLinks.slice();
+
+  const mk = markers.filter(m=> filter(m.title) || filter((m.tags||[]).join(",")) || filter(m.note));
+  const rg = regions.filter(r=> filter(r.name) || filter((r.tags||[]).join(",")) || filter(r.note));
+  const lk = links.filter(l=>{
+    const a=getMarker(l.a), b=getMarker(l.b);
+    const txt = `${a?.title||""} ${b?.title||""} ${l.label||""} ${l.kind||""}`;
+    return filter(txt);
+  });
+
+  const block = (title, body) => `
+    <div class="hr"></div>
+    <h3>${title}</h3>
+    ${body || `<div class="small">пусто</div>`}
+  `;
+
+  const markerRows = mk.map(m=>`
+    <div class="row" style="padding:8px 0; border-bottom:1px solid rgba(233,207,103,.08);">
+      <span class="pill">${markerIcon(m.type)} ${esc(m.title)}</span>
+      <span class="pill">${m.layer || "—"}</span>
+      <span class="pill">гл.${asNum(m.chapter,1)}</span>
+      <div class="spacer"></div>
+      <button class="btn ghost small" data-pick="marker:${m.id}">Выбрать</button>
+    </div>
+  `).join("");
+
+  const regionRows = rg.map(r=>`
+    <div class="row" style="padding:8px 0; border-bottom:1px solid rgba(233,207,103,.08);">
+      <span class="pill">🗺 ${esc(r.name)}</span>
+      <span class="pill">${r.layer || "—"}</span>
+      <div class="spacer"></div>
+      <button class="btn ghost small" data-pick="region:${r.id}">Выбрать</button>
+    </div>
+  `).join("");
+
+  const linkRows = lk.map(l=>{
+    const a=getMarker(l.a), b=getMarker(l.b);
+    const name = `${esc(a?.title||"A")} ↔ ${esc(b?.title||"B")}${l.label?(" — "+esc(l.label)):""}`;
+    return `
+      <div class="row" style="padding:8px 0; border-bottom:1px solid rgba(233,207,103,.08);">
+        <span class="pill">🔗 ${name}</span>
+        <div class="spacer"></div>
+        <button class="btn ghost small" data-pick="maplink:${l.id}">Выбрать</button>
+      </div>
+    `;
+  }).join("");
+
+  $("#mapLists").innerHTML =
+    block(`Отметки (${mk.length})`, markerRows) +
+    block(`Регионы (${rg.length})`, regionRows) +
+    block(`Линии (${lk.length})`, linkRows);
+
+  $$("[data-pick]", $("#mapLists")).forEach(btn=>{
+    btn.onclick = ()=>{
+      const [kind,id] = btn.dataset.pick.split(":");
+      state.ui.selected = {kind, id};
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+    };
+  });
+}
+
+$("#mapSearch").oninput = ()=>{
+  state.ui.mapSearch = $("#mapSearch").value || "";
+  scheduleSave();
+  renderMapLists();
+};
+
+/* Create marker / region / link modes */
+function setMapModePill(mode){
+  $("#mapModePill").textContent =
+    mode==="markers" ? "Режим: Отметки" :
+    mode==="regions" ? "Режим: Регионы" :
+    mode==="links" ? "Режим: Связи" : "Режим: Просмотр";
+}
+
+function initMapUi(){
+  $("#fitMode").value = state.ui.fitMode || "contain";
+  $("#mapScale").value = clamp(asNum(state.ui.mapScale,100), 70, 170);
+  $("#mapScaleLabel").textContent = `${clamp(asNum(state.ui.mapScale,100), 70, 170)}%`;
+  $("#toggleLabels").checked = !!state.ui.showLabels;
+  setMapMode(state.ui.mapMode || "markers");
+  setMapModePill(state.ui.mapMode || "markers");
+  renderLayerPills();
+}
+
+function addMapLinkFlow(markerId){
+  if(!state.ui.linkFirstMarkerId){
+    state.ui.linkFirstMarkerId = markerId;
+    $("#linkHintPill").textContent = "Выбери вторую отметку…";
+  }else{
+    addMapLink(state.ui.linkFirstMarkerId, markerId);
+    state.ui.linkFirstMarkerId = null;
+    $("#linkHintPill").textContent = "Готово. Можно ещё.";
+    addJournal("map","Связь на карте","Создана линия между отметками.");
+  }
+  scheduleSave();
+}
+
+/* ===== Timeline (eras) ===== */
+function renderEras(){
+  const grid = $("#erasGrid");
+  const eras = state.eras;
+
+  const min = Math.min(...eras.map(e=>asNum(e.from,0)));
+  const max = Math.max(...eras.map(e=>asNum(e.to,1)));
+  const span = Math.max(1, max - min);
+
+  grid.innerHTML = eras.map(e=>{
+    const start = asNum(e.from,0);
+    const end = asNum(e.to,1);
+    const left = ((start - min) / span) * 100;
+    const width = (Math.max(1, end - start) / span) * 100;
+
+    return `
+      <div class="card paper">
+        <div class="row">
+          <span class="pill">⏳ Эпоха</span>
+          <div class="spacer"></div>
+          <button class="btn danger small" data-delera="${e.id}">🗑</button>
+        </div>
+
+        <label>Название</label>
+        <input data-era="${e.id}:title" value="${esc(e.title||"")}">
+
+        <div class="row">
+          <div style="flex:1;">
+            <label>От</label>
+            <input data-era="${e.id}:from" type="number" value="${esc(e.from)}">
+          </div>
+          <div style="flex:1;">
+            <label>До</label>
+            <input data-era="${e.id}:to" type="number" value="${esc(e.to)}">
+          </div>
+        </div>
+
+        <div class="timelineBar">
+          <div class="timelineFill" style="left:${left}%; width:${width}%;"></div>
+        </div>
+
+        <label>Кратко</label>
+        <textarea data-era="${e.id}:summary" placeholder="легенда эпохи…">${esc(e.summary||"")}</textarea>
+      </div>
+    `;
+  }).join("");
+
+  $$("[data-era]", grid).forEach(el=>{
+    el.oninput = ()=>{
+      const [id, field] = el.dataset.era.split(":");
+      const era = state.eras.find(x=>x.id===id);
+      if(!era) return;
+      if(field==="title") era.title = el.value;
+      if(field==="from") era.from = asNum(el.value, 0);
+      if(field==="to") era.to = asNum(el.value, 1);
+      if(field==="summary") era.summary = el.value;
+      scheduleSave();
+      renderEras();
+    };
+  });
+
+  $$("[data-delera]", grid).forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.eras.length<=1){ alert("Нужна минимум 1 эпоха."); return; }
+      if(!confirm("Удалить эпоху?")) return;
+      state.eras = state.eras.filter(x=>x.id!==btn.dataset.delera);
+      addJournal("timeline","Эпоха удалена","Удалена эпоха из таймлайна.");
+      scheduleSave();
+      renderEras();
+    };
+  });
+
+  if(!renderEras._wired){
+    $("#addEraBtn").onclick = ()=>{
+      state.eras.unshift({ id: uid(), title: "Новая эпоха", from: 0, to: 100, summary: "" });
+      addJournal("timeline","Новая эпоха","Добавлена эпоха в таймлайн.");
+      scheduleSave();
+      renderEras();
+    };
+    renderEras._wired = true;
+  }
+}
+
+/* ===== Factions ===== */
+function renderFactions(){
+  const grid = $("#factionsGrid");
+  grid.innerHTML = state.factions.map(f=>`
+    <div class="card paper">
+      <div class="row">
+        <span class="pill">🩸 Фракция</span>
+        <div class="spacer"></div>
+        <button class="btn danger small" data-delf="${f.id}">🗑</button>
+      </div>
+
+      <label>Название</label>
+      <input data-fac="${f.id}:name" value="${esc(f.name||"")}">
+
+      <label>Цвет влияния</label>
+      <select data-fac="${f.id}:color">
+        <option value="red">Красный</option>
+        <option value="gold">Золото</option>
+        <option value="white">Белый</option>
+        <option value="blue">Синий</option>
+        <option value="green">Зелёный</option>
+        <option value="purple">Фиолетовый</option>
+      </select>
+
+      <label>Кратко</label>
+      <textarea data-fac="${f.id}:summary" placeholder="их клятва, идеология, цена…">${esc(f.summary||"")}</textarea>
+    </div>
+  `).join("");
+
+  $$("[data-fac]", grid).forEach(el=>{
+    const [id, field] = el.dataset.fac.split(":");
+    const fac = state.factions.find(x=>x.id===id);
+    if(!fac) return;
+    if(field==="color" && el.tagName==="SELECT") el.value = fac.color || "red";
+
+    el.oninput = ()=>{
+      const [id2, field2] = el.dataset.fac.split(":");
+      const fac2 = state.factions.find(x=>x.id===id2);
+      if(!fac2) return;
+      if(field2==="name") fac2.name = el.value;
+      if(field2==="color") fac2.color = el.value;
+      if(field2==="summary") fac2.summary = el.value;
+      scheduleSave();
+      renderMap();
+      renderSelectedEditor();
+    };
+  });
+
+  $$("[data-delf]", grid).forEach(btn=>{
+    btn.onclick = ()=>{
+      if(!confirm("Удалить фракцию? Регионы потеряют ссылку на неё.")) return;
+      const id = btn.dataset.delf;
+      state.factions = state.factions.filter(x=>x.id!==id);
+      state.map.regions.forEach(r=>{ if(r.factionId===id) r.factionId=""; });
+      addJournal("faction","Фракция удалена","Удалена фракция.");
+      scheduleSave();
+      renderFactions();
+      renderMap();
+      renderSelectedEditor();
+    };
+  });
+
+  if(!renderFactions._wired){
+    $("#addFactionBtn").onclick = ()=>{
+      state.factions.unshift({ id: uid(), name:"Новая фракция", color:"red", summary:"" });
+      addJournal("faction","Новая фракция","Добавлена фракция.");
+      scheduleSave();
+      renderFactions();
+    };
+    renderFactions._wired = true;
+  }
+}
+
+/* ===== Events ===== */
+function renderEvents(){
+  const grid = $("#eventsGrid");
+  if(!state.events.length){
+    grid.innerHTML = `<div class="card paper"><div class="hint">Пока нет событий. Создай первое — и хроника начнёт жить.</div></div>`;
+  }else{
+    grid.innerHTML = state.events.map(ev=>`
+      <div class="card paper">
+        <div class="row">
+          <span class="pill">📌 Событие</span>
+          <div class="spacer"></div>
+          <button class="btn danger small" data-delev="${ev.id}">🗑</button>
+        </div>
+
+        <label>Название</label>
+        <input data-ev="${ev.id}:title" value="${esc(ev.title||"")}">
+
+        <div class="row">
+          <div style="flex:1;">
+            <label>Глава</label>
+            <input data-ev="${ev.id}:chapter" type="number" min="1" value="${asNum(ev.chapter,1)}">
+          </div>
+          <div style="flex:2;">
+            <label>Теги</label>
+            <input data-ev="${ev.id}:tags" value="${esc((ev.tags||[]).join(", "))}">
+          </div>
+        </div>
+
+        <label>Кратко</label>
+        <textarea data-ev="${ev.id}:summary" placeholder="что произошло?">${esc(ev.summary||"")}</textarea>
+
+        <label>Детали</label>
+        <textarea data-ev="${ev.id}:note" placeholder="причины, последствия…">${esc(ev.note||"")}</textarea>
+
+        <label>🔮 Тайное</label>
+        <textarea data-ev="${ev.id}:secret">${esc(ev.secret||"")}</textarea>
+      </div>
+    `).join("");
+  }
+
+  $$("[data-ev]", grid).forEach(el=>{
+    el.oninput = ()=>{
+      const [id, field] = el.dataset.ev.split(":");
+      const ev = state.events.find(x=>x.id===id);
+      if(!ev) return;
+      if(field==="title") ev.title = el.value;
+      if(field==="chapter") ev.chapter = clamp(asNum(el.value,1), 1, 999999);
+      if(field==="tags"){ ev.tags = normalizeTags(el.value); ensureThemesFromTags(ev.tags); }
+      if(field==="summary") ev.summary = el.value;
+      if(field==="note") ev.note = el.value;
+      if(field==="secret") ev.secret = el.value;
+      scheduleSave();
+      renderSecrets();
+    };
+  });
+
+  $$("[data-delev]", grid).forEach(btn=>{
+    btn.onclick = ()=>{
+      if(!confirm("Удалить событие?")) return;
+      state.events = state.events.filter(x=>x.id!==btn.dataset.delev);
+      addJournal("event","Событие удалено","Удалено событие.");
+      scheduleSave();
+      renderEvents();
+      renderSecrets();
+    };
+  });
+
+  if(!renderEvents._wired){
+    $("#addEventBtn").onclick = ()=>{
+      const ev = { id: uid(), title:"Новое событие", chapter:1, tags:[], summary:"", note:"", secret:"" };
+      state.events.unshift(ev);
+      addJournal("event",`Событие: ${ev.title}`,"Создано новое событие.");
+      scheduleSave();
+      renderEvents();
+      renderSecrets();
+    };
+    renderEvents._wired = true;
+  }
+}
+
+/* ===== Universal Links ===== */
+function allEntitiesForLinks(){
+  const out = [];
+  const push = (kind, id, label) => out.push({ kind, id, label });
+
+  state.events.forEach(x=>push("event", x.id, `📌 ${x.title}`));
+  state.factions.forEach(x=>push("faction", x.id, `🩸 ${x.name}`));
+  state.map.markers.forEach(x=>push("mapMarker", x.id, `📍 ${x.title}`));
+  state.map.regions.forEach(x=>push("mapRegion", x.id, `🗺 ${x.name}`));
+
+  return out;
+}
+function entityLabel(ref){
+  if(!ref) return "—";
+  const {kind,id} = ref;
+  if(kind==="event") return `📌 ${state.events.find(x=>x.id===id)?.title || "?"}`;
+  if(kind==="faction") return `🩸 ${state.factions.find(x=>x.id===id)?.name || "?"}`;
+  if(kind==="mapMarker") return `📍 ${getMarker(id)?.title || "?"}`;
+  if(kind==="mapRegion") return `🗺 ${getRegion(id)?.name || "?"}`;
+  return "—";
+}
+
+function renderLinks(){
+  const grid = $("#linksGrid");
+  const entities = allEntitiesForLinks();
+  const options = () =>
+    [`<option value="">— выбрать —</option>`].concat(
+      entities.map(e=>`<option value="${esc(e.kind)}:${esc(e.id)}">${esc(e.label)}</option>`)
+    ).join("");
+
+  if(!state.links.length){
+    grid.innerHTML = `<div class="card paper"><div class="hint">Пока нет связей. Создай первую — и мир начнёт “дышать”.</div></div>`;
+  }else{
+    grid.innerHTML = state.links.map(l=>`
+      <div class="card paper">
+        <div class="row">
+          <span class="pill">🔗 Связь</span>
+          <div class="spacer"></div>
+          <button class="btn danger small" data-dellink="${l.id}">🗑</button>
+        </div>
+
+        <label>Откуда</label>
+        <select data-link="${l.id}:from">${options()}</select>
+
+        <label>Куда</label>
+        <select data-link="${l.id}:to">${options()}</select>
+
+        <label>Тип</label>
+        <select data-link="${l.id}:type">
+          <option value="ally">Союз</option>
+          <option value="enemy">Вражда</option>
+          <option value="owes">Долг/клятва</option>
+          <option value="controls">Контроль/влияние</option>
+          <option value="created">Создал/породил</option>
+          <option value="secret">Тайная связь</option>
+          <option value="other">Другое</option>
+        </select>
+
+        <label>Кратко</label>
+        <input data-link="${l.id}:label" value="${esc(l.label||"")}" placeholder="напр.: «держит в заложниках»">
+
+        <label>Описание</label>
+        <textarea data-link="${l.id}:note">${esc(l.note||"")}</textarea>
+
+        <label>🔮 Тайное</label>
+        <textarea data-link="${l.id}:secret">${esc(l.secret||"")}</textarea>
+
+        <div class="small">Сейчас: <b>${esc(entityLabel(l.from))}</b> → <b>${esc(entityLabel(l.to))}</b></div>
+      </div>
+    `).join("");
+  }
+
+  $$("[data-link]", grid).forEach(el=>{
+    const [id, field] = el.dataset.link.split(":");
+    const link = state.links.find(x=>x.id===id);
+    if(!link) return;
+
+    if(el.tagName==="SELECT" && (field==="from" || field==="to")){
+      const v = link[field];
+      el.value = v ? `${v.kind}:${v.id}` : "";
+    }
+    if(el.tagName==="SELECT" && field==="type") el.value = link.type || "other";
+
+    el.oninput = ()=>{
+      const [id2, field2] = el.dataset.link.split(":");
+      const link2 = state.links.find(x=>x.id===id2);
+      if(!link2) return;
+
+      if(field2==="from" || field2==="to"){
+        const raw = el.value || "";
+        if(!raw) link2[field2] = null;
+        else{
+          const [k,i] = raw.split(":");
+          link2[field2] = { kind:k, id:i };
+        }
+      }
+      if(field2==="type") link2.type = el.value;
+      if(field2==="label") link2.label = el.value;
+      if(field2==="note") link2.note = el.value;
+      if(field2==="secret") link2.secret = el.value;
+
+      scheduleSave();
+      renderLinks();
+      renderSecrets();
+    };
+  });
+
+  $$("[data-dellink]", grid).forEach(btn=>{
+    btn.onclick = ()=>{
+      if(!confirm("Удалить связь?")) return;
+      state.links = state.links.filter(x=>x.id!==btn.dataset.dellink);
+      addJournal("link","Связь удалена","Удалена связь между сущностями.");
+      scheduleSave();
+      renderLinks();
+      renderSecrets();
+    };
+  });
+
+  if(!renderLinks._wired){
+    $("#addLinkBtn").onclick = ()=>{
+      state.links.unshift({ id: uid(), from:null, to:null, type:"other", label:"", note:"", secret:"" });
+      addJournal("link","Создана связь","Добавлена новая связь.");
+      scheduleSave();
+      renderLinks();
+    };
+    renderLinks._wired = true;
+  }
+}
+
+/* ===== Checkpoints ===== */
+function renderCheckpoints(){
+  const grid = $("#checkpointsGrid");
+  if(!state.checkpoints.length){
+    grid.innerHTML = `<div class="card paper"><div class="hint">Пока нет чекпоинтов. Создай первый — это твоя страховка.</div></div>`;
+    return;
+  }
+  grid.innerHTML = state.checkpoints.map(cp=>`
+    <div class="card paper">
+      <div class="row">
+        <span class="pill">✅ ${esc(cp.title||"Чекпоинт")}</span>
+        <div class="spacer"></div>
+        <span class="pill">${esc(prettyDate(cp.at))}</span>
+      </div>
+      <div class="hr"></div>
+      <div class="small">${esc(cp.note||"").replaceAll("\n","<br>")}</div>
+      <div class="hr"></div>
+      <div class="row">
+        <button class="btn ok small" data-restore="${cp.id}">⏪ Откатиться</button>
+        <button class="btn ghost small" data-exportcp="${cp.id}">💾 Экспорт</button>
+        <button class="btn danger small" data-delcp="${cp.id}">🗑</button>
+      </div>
+    </div>
+  `).join("");
+
+  $$("[data-restore]", grid).forEach(b=>{
+    b.onclick = ()=>{
+      const id = b.dataset.restore;
+      const cp = state.checkpoints.find(x=>x.id===id);
+      if(!cp) return;
+      if(!confirm("Откатиться к этому чекпоинту? Текущее состояние будет заменено.")) return;
+      const keepTheme = localStorage.getItem("ether_theme") || "dark";
+      state = migrateState(cp.snapshot);
+      state.checkpoints = state.checkpoints; // keep snapshots inside snapshot anyway
+      saveState();
+      addJournal("checkpoint","Откат к чекпоинту",`Откат: ${cp.title}`);
+      renderAll();
+      applyTheme(keepTheme);
+      openTab("checkpoints");
+    };
+  });
+  $$("[data-delcp]", grid).forEach(b=>{
+    b.onclick = ()=>{
+      if(!confirm("Удалить чекпоинт?")) return;
+      const id = b.dataset.delcp;
+      state.checkpoints = state.checkpoints.filter(x=>x.id!==id);
+      addJournal("checkpoint","Чекпоинт удалён","Удалён чекпоинт.");
+      scheduleSave();
+      renderCheckpoints();
+      renderJournal();
+    };
+  });
+  $$("[data-exportcp]", grid).forEach(b=>{
+    b.onclick = ()=>{
+      const id = b.dataset.exportcp;
+      const cp = state.checkpoints.find(x=>x.id===id);
+      if(!cp) return;
+      const data = JSON.stringify(cp, null, 2);
+      const blob = new Blob([data], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ether_checkpoint_${(cp.title||"checkpoint").replaceAll(" ","_")}.json`;
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 1200);
+    };
+  });
+}
+
+$("#createCheckpointBtn").onclick = ()=>{
+  const title = ($("#cpTitle").value || "").trim() || "Чекпоинт";
+  const note = ($("#cpNote").value || "").trim();
+  const cp = {
+    id: uid(),
+    at: nowIso(),
+    title,
+    note,
+    snapshot: JSON.parse(JSON.stringify(state))
+  };
+  // don't snapshot checkpoints inside checkpoints infinitely? We'll keep it, but can prune old:
+  cp.snapshot.checkpoints = []; // avoid growing snapshot size
+  state.checkpoints.unshift(cp);
+  $("#cpTitle").value = "";
+  $("#cpNote").value = "";
+  addJournal("checkpoint",`Чекпоинт: ${title}`, note || "Снимок мира сохранён.");
+  scheduleSave();
+  renderCheckpoints();
+  renderJournal();
+};
+
+/* ===== Journal ===== */
+function renderJournal(){
+  const grid = $("#journalGrid");
+  if(!state.journal.length){
+    grid.innerHTML = `<div class="card paper"><div class="hint">Хроника пуста. Но это ненадолго.</div></div>`;
+    return;
+  }
+  grid.innerHTML = state.journal.map(j=>`
+    <div class="card paper">
+      <div class="row">
+        <span class="pill">📜 ${esc(j.title||"Запись")}</span>
+        <div class="spacer"></div>
+        <span class="pill">${esc(prettyDate(j.at))}</span>
+        <button class="btn danger small" data-delj="${j.id}">🗑</button>
+      </div>
+      <div class="hr"></div>
+      <div class="small">${esc(j.text||"").replaceAll("\n","<br>")}</div>
+      <div class="hr"></div>
+      <div class="small">Тип: <span class="mono">${esc(j.kind||"note")}</span></div>
+    </div>
+  `).join("");
+
+  $$("[data-delj]", grid).forEach(b=>{
+    b.onclick = ()=>{
+      if(!confirm("Удалить запись хроники?")) return;
+      state.journal = state.journal.filter(x=>x.id!==b.dataset.delj);
+      scheduleSave();
+      renderJournal();
+    };
+  });
+}
+
+$("#addJournalBtn").onclick = ()=>{
+  const title = prompt("Заголовок записи:", "Запись") || "Запись";
+  const text = prompt("Текст записи:", "") || "";
+  addJournal("manual", title, text);
+  renderJournal();
+};
+
+/* ===== Secrets aggregation ===== */
+function renderSecrets(){
+  const out = [];
+
+  const add = (title, where, secret)=>{
+    const s = (secret||"").trim();
+    if(!s) return;
+    out.push(`
+      <div class="card paper">
+        <div class="row">
+          <span class="pill">🔮 ${esc(title)}</span>
+          <div class="spacer"></div>
+          <span class="pill">${esc(where)}</span>
+        </div>
+        <div class="hr"></div>
+        <div class="hint">${esc(s).replaceAll("\n","<br>")}</div>
+      </div>
+    `);
+  };
+
+  state.events.forEach(x=>add(x.title, "События", x.secret));
+  state.links.forEach(x=>add(x.label || "Связь", "Связи", x.secret));
+  state.map.markers.forEach(x=>add(x.title, "Карта: отметки", x.secret));
+  state.map.regions.forEach(x=>add(x.name, "Карта: регионы", x.secret));
+
+  $("#secretsGrid").innerHTML = out.length ? out.join("") : `
+    <div class="card paper">
+      <div class="hint">Пока нет тайных заметок. Заполняй поле «🔮 Тайная заметка» в объектах — и они появятся здесь.</div>
+    </div>
+  `;
+}
+
+/* ===== Render all ===== */
+function renderAll(){
+  renderWorld();
+
+  restoreMapImage();
+  initMapUi();
+  renderMap();
+  renderSelectedEditor();
+  renderMapLists();
+
+  renderEras();
+  renderFactions();
+  renderEvents();
+  renderLinks();
+
+  renderCheckpoints();
+  renderJournal();
+  renderSecrets();
+
+  saveState();
+}
+
+/* ===== Startup ===== */
+openTab(state.ui.tab || "world");
+renderAll();
+</script>
+</body>
+</html>
